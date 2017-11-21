@@ -6,7 +6,11 @@
         crossorigin="anonymous">
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
         crossorigin="anonymous">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/css/app.css">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh"
+        crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ"
         crossorigin="anonymous"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
@@ -18,11 +22,11 @@
     <div id="tweetApp">
         <nav class="navbar navbar-default">
             <a class="navbar-brand" href="#">Home</a>
-            <form class="form-inline">
+            <form class="form-inline" action="javascript:void(0)">
                 <div class="input-group">
                     <input class="form-control" type="text" placeholder="Search" v-model="searchWord">
                     <span class="input-group-btn">
-                        <button class="btn btn-outline" type="submit" v-on:submit="search">
+                        <button class="btn btn-outline" type="submit" v-on:click="submitSearch" v-on:submit="submitSearch">
                             <i class="fa fa-search" aria-hidden="true"></i>
                         </button>
                     </span>
@@ -30,8 +34,21 @@
             </form>
         </nav>
 
-        <div v-for="tweet in tweets">
-            {{ tweet.text }}
+        <div v-for="tweet in fetchedTweets.tweets">
+            <div class="col-md-6 tweetbox">
+                <div class="user">
+                    <span class="name">{{tweet.user.name}}</span>
+                    <span class="screen_name">{{"@" + tweet.user.screen_name}}</span>
+                </div>
+                <div class="text">
+                    {{tweet.text}}
+                    <div v-if="tweet.retweeted_status"><a class="ex_rt" v-on:click="expandRetweet(tweet.retweeted_status.id)">[RT]<div id="{{tweet.retweeted_status.id}}"></div></a></div>
+                    <div v-if="tweet.truncated"><a class="ex_col" v-on:click="expand(tweet)">[expand]</a></div>
+                </div>
+                <span class="date">{{tweet.formatted_datetime}}</span>
+                <span class="retweet"><i class="fa fa-retweet fa-fw" aria-hidden="true"></i><span class="retweet_count">{{tweet.retweet_count != undefined ? tweet.retweet_count : 0}}</span></span>
+                <span class="favorite"><i class="fa fa-heart fa-fw" aria-hidden="true"></i><span class="favorite_count">{{tweet.favorite_count != undefined ? tweet.favorite_count : 0}}</span></span>
+            </div>
         </div>
     </div>
 </body>

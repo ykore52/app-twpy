@@ -1,0 +1,32 @@
+body {
+    font-family:-apple-system, BlinkMacSystemFont, "Helvetica Neue", "Segoe UI","Noto Sans Japanese","ヒラギノ角ゴ ProN W3", Meiryo, sans-serif;
+}
+
+.tweetbox {
+    max-width: 400px;
+    border-top: 1px solid #999;
+    padding: 1.5em;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.tweetbox > .user > .name {
+    font-size: 1em;
+    color: #555;
+}
+
+.tweetbox > .user > .screen_name {
+    font-size: 0.8em;
+    color: #999;
+}
+
+.tweetbox > .date {
+    font-size: 0.8em;
+    font-style: italic;
+    color: #666;
+}
+
+.tweetbox > .retweet { color: #666; font-size: 0.7em; padding-left: 0.3em; }
+.tweetbox > .retweet > .retweet_count { padding-left: 0.5em }
+.tweetbox > .favorite { color: #666;  font-size: 0.7em; padding-left: 0.3em; }
+.tweetbox > .retweet > .favorite_count { padding-left: 0.5em }

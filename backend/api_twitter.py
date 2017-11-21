@@ -15,36 +15,47 @@ try:
 except:
     raise Exception("Twitter Account Authentication Failed.")
 
+class HomeTimelineResource(object):
+    
+    def on_get(self, req, res):
+        res.media = self._getHomeTimeline()
+        res.content_type = 'application/json'
+
+    def _getHomeTimeline(self):
+        rv = []
+        for status in api.GetHomeTimeline():
+            rv.append(str(status))
+        return '{"tweets":[' + ','.join(rv) + "]}"
+
+class UserTimelineResource(object):
+    
+    def on_get(self, req, res, screen_name):
+        res.media = str(self._getUserTimeline(screen_name = screen_name))
+        res.content_type = 'application/json'
+
+    def _getUserTimeline(self, screen_name):
+        rv = []
+        for status in api.GetUserTimeline(screen_name = screen_name):
+            rv.append(str(status))
+        return '{"tweets":[' + ','.join(rv) + "]}"
+
 class SearchResource(object):
 
     def on_get(self, req, res):
-
-        rv = self._searchTweets(urllib.parse.urlencode(req.params))
-        res.media = rv
+        res.media = self._searchTweets(urllib.parse.urlencode(req.params))
+        res.content_type = 'application/json'
 
     def _searchTweets(self, search_options):
-        temp = api.GetSearch(raw_query=search_options)
+        rv = []
+        for t in api.GetSearch(raw_query=search_options):
+            rv.append(str(t))
+        return '{"tweets":[' + ','.join(rv) + "]}"
 
-        results = []
-        for t in temp:
-            dict_status = {
-                'id': t.id,
-                'user': t.user.screen_name,
-                'text': t.text,
-                'created_at': t.created_at
-            }
-            results.append(dict_status)
+class StatusResource(object):
+    
+    def on_get(self, req, res, id):
+        res.media = self._getStatus(id)
+        res.content_type = 'application/json'
 
-        return "{" + json.dumps(results) + "}"
-
-class UserTimelineResource(object):
-
-    def on_post(self, req, res):
-
-        print(req.context)
-#        req.context.user
-        res.media = req.context
- #       res.media = self._getUserTimeline()
-
-    def _getUserTimeline(user):
-        return api.GetUserTimeline(user)
+    def _getStatus(self, id):
+        return str(api.GetStatus(status_id=id))
